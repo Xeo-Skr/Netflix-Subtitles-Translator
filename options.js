@@ -12,8 +12,7 @@ function restore_options() {
         items.user_lang;
       document.querySelector('input[name="auto_translate"]').checked =
         items.auto_translate;
-      document.querySelector('input[name="token"]').value =
-        items.token;
+      document.querySelector('input[name="token"]').value = items.token;
     }
   );
 }

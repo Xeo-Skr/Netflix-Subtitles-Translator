@@ -47,7 +47,7 @@ body:not(.open-tr-panel) #translate-ext {
   height: 100vh;
   overflow: hidden;
   background: white;
-  color: #333;
+  color: #888;
   font-family: sans-serif !important;
   font-size: 25px;
 }
@@ -63,6 +63,7 @@ body:not(.open-tr-panel) #translate-ext {
 #translate-ext #subtitle-wrap {
   line-height: 1.5;
   max-height: 100%;
+  background: #111;
   box-shadow: inset 0px 0 20px rgba(0, 0, 0, 0.2);
 }
 #translate-ext > *::-webkit-scrollbar {
@@ -98,7 +99,7 @@ body:not(.open-tr-panel) #translate-ext {
 
 #translate-ext #subtitle-wrap dl dt {
   font-size: 85%;
-  color: #222;
+  color: #888;
 }
 #translate-ext #subtitle-wrap dl dt span {
   transition: all 0.5s ease;
@@ -113,7 +114,7 @@ body:not(.open-tr-panel) #translate-ext {
 }
 
 #translate-ext #subtitle-wrap dl.sent-tr-open dd {
-  color: #888;
+  color: #aaa;
   font-size: 70%;
 }
 
@@ -124,7 +125,7 @@ body:not(.open-tr-panel) #translate-ext {
   cursor: pointer;
   z-index: 2;
   top: 0;
-  background: #fff;
+  background: #111;
   box-shadow: 10px 0 15px rgba(0, 0, 0, 0.2);
 }
 #translate-ext.open-tr-panel #translation-wrap #tr-close-x {
@@ -183,12 +184,6 @@ body:not(.open-tr-panel) #translate-ext {
   margin: 0 10px;
 }
 
-#translate-ext #describe-tr-title span {
-  background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACoUlEQVR4nGJgIBJ8//7d+cbNW29v37nzGFkcAAAA//9iIkbzu/fva+/cvbdHSFBQ6Pv3HzLIcgAAAAD//yKIHj16vPfqtev/v3z58v//////L166/B9ZHgAAAP//YsGl8c+fP+J37t498/3HdxlVFWUGVlZWBgYGBoZ///6hqAMAAAD//8Iw4P37D9kfPn4MunL1mpWAAD+HrIwMAxMTwqfoBgAAAAD//0IJg6tXrz1++uzZFFZWFqffv39zyMvJoWiGGXDv/v29f/78EWdgYGAAAAAA//9Ckf3y9auMtpYmg7SUFIZNyAb8+/vP6eGjR8sYGBgYAAAAAP//YkKXxOVUZHF5eTmGV69eOzEwMDAAAAAA//9U0MEJADAMA7Hbf2GDSbn+AplAoHOQhLaoJEFFTzpvBnWBDwAA//9UzLEJACAMRcEHWUH338QtdIdfpFPSJGAnWB/cF0jC3clMJBERVNVzM2Ofw5yL3toAuAAAAP//QjHg//9/L3bu3CUhKSnB8OrlS4Zv374x/Pz5E+4KDg4Ohs+fPzOIiAgfVFRUiGJgYGAAAAAA//9CCYOoyEhJS0uL0m/fv5/49PnTrzNnzzL8+vWb4du3bwwfP35k+PbtG8OXL58ZTIyNHVhZWV8yMDAwAAAAAP//YsQaUgwMDL9//xZfu3bthZ+/fkno6+kxMDIyMrCxsTHs2bOXITc3B64PAAAA///CmRdYWVlfRkRESIoIixzbu28fw9u3bxm+fv3K8PnLZxR1AAAAAP//IpiZfHy8ncxMTSfs2LGT4cqVqwzv379nYGRkZIXJAwAAAP//ggUiIwMDAzMjIyMLIyMjJxTzQWl2Z2fnVZs3b368bdv2ZnYO9p8sLCwGf//+ffjv3793AAAAAP//AwAB0wo2FiR15AAAAABJRU5ErkJggg==")
-    center right no-repeat;
-  padding-right: 17px;
-  cursor: pointer;
-}
 #translate-ext #describe-tr-wrap i {
   font-size: 50%;
   opacity: 0.7;

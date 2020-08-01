@@ -32,7 +32,7 @@
         src_lang: "es",
         user_lang: "en",
         auto_translate: true,
-        token: '',
+        token: "",
       },
       function (items) {
         config.user = items;
@@ -232,42 +232,6 @@
               " — " + data.data.translations[0].translatedText
             );
         }
-
-        /*
-        try {
-          data["dict"].forEach(function (block) {
-            let items = [];
-            let limit = 3;
-            try {
-              block["entry"].forEach(function (ceil) {
-                items[ceil["word"]] = ceil["reverse_translation"];
-                if (--limit == 0) {
-                  throw "BreakException";
-                }
-              });
-            } catch (e) {
-              if (e !== "BreakException") throw e;
-            }
-
-            self.addToWrap(block["pos"], items);
-          });
-        } catch (e) {}
-        */
-      },
-
-      addToWrap: function (type, items) {
-        let html = "<i>" + type + "</i>";
-
-        for (var key in items) {
-          html += "<dl>";
-          html += "<dt>" + key + "</dt>";
-          html += "<dd>" + items[key].join(", ") + "</dd>";
-          html += "</dl>";
-        }
-
-        document
-          .querySelector("#" + config.mainWrap + " #" + config.dsecriptionWrap)
-          .insertAdjacentHTML("beforeend", html);
       },
     };
   }
@@ -327,7 +291,12 @@
         "#" + config.mainWrap + " #" + config.subtitleWrap
       ).innerHTML = "";
     }
-  }, 1000);
+  }, 500);
+
+  chrome.storage.local.get(["is_open"], function (result) {
+    let bdclist = document.querySelector("body").classList;
+    if (result.is_open) bdclist.add("open-tr-panel");
+  });
 })();
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -335,10 +304,12 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (!window.location.href.match(/.+:\/\/.+netflix\.com\/watch\//)) {
       return false;
     }
+    //toggle
     let bdclist = document.querySelector("body").classList;
-    bdclist.contains("open-tr-panel")
-      ? bdclist.remove("open-tr-panel")
-      : bdclist.add("open-tr-panel");
+    const is_open = bdclist.contains("open-tr-panel");
+    chrome.storage.local.set({ is_open: !is_open });
+
+    is_open ? bdclist.remove("open-tr-panel") : bdclist.add("open-tr-panel");
   }
   return true;
 });
