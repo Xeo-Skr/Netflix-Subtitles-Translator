@@ -3,6 +3,7 @@ function restore_options() {
     {
       src_lang: "es",
       user_lang: "en",
+      token: "",
       auto_translate: true,
     },
     function (items) {
@@ -11,6 +12,8 @@ function restore_options() {
         items.user_lang;
       document.querySelector('input[name="auto_translate"]').checked =
         items.auto_translate;
+      document.querySelector('input[name="token"]').value =
+        items.token;
     }
   );
 }
@@ -24,6 +27,7 @@ function save_options() {
     src_lang: get_value("select", "src_lang"),
     user_lang: get_value("select", "user_lang"),
     auto_translate: get_value("input", "auto_translate"),
+    token: get_value("input", "token"),
   });
 }
 
@@ -36,5 +40,6 @@ function add_save_event(type, name) {
 add_save_event("select", "src_lang");
 add_save_event("select", "user_lang");
 add_save_event("input", "auto_translate");
+add_save_event("input", "token");
 
 document.addEventListener("DOMContentLoaded", restore_options);

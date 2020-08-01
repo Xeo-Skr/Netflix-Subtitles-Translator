@@ -2,9 +2,6 @@
   let translated = [];
   let alltries = [];
 
-  let token =
-    "ya29.c.Ko8B1gfatCdGQs_9yCMHckUxKUk7mWcYPWSVKWzkfzF8pW3PnOh77QHTyMwSx1xfWdunWVB_OETCNJZma9nKYzzEsz-7hqnM4ywOySZU1eqF5tiN8GKbwMZthIFFqKPXLUY4iwxxBfkSRaW5opsrOl5_-b2ivGERfdiWaAoDPzLEeFwl1ELiemdRMXqPYIxyyUI";
-
   let config = {
     launched: false,
 
@@ -35,6 +32,7 @@
         src_lang: "es",
         user_lang: "en",
         auto_translate: true,
+        token: '',
       },
       function (items) {
         config.user = items;
@@ -88,7 +86,7 @@
         format: "text",
       }),
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${config.user.token}`,
         "Content-Type": "application/json; charset=utf-8",
       },
     })
