@@ -123,7 +123,10 @@
         );
 
         self = this;
-        if (config.user.auto_translate) self.translateSentence(el.lastChild);
+        let bdclist = document.querySelector("body").classList;
+        // check that the panel is open
+        if (config.user.auto_translate && bdclist.contains("open-tr-panel"))
+          self.translateSentence(el.lastChild);
         self.scroll();
         self.addClickListner();
       },
