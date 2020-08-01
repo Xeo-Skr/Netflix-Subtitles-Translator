@@ -1,4 +1,4 @@
-#about
+# about
 Learn a language through Netflix. Translate whole phrase or each word.
 
 # Original project:
