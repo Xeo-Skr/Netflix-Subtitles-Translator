@@ -41,16 +41,11 @@
         user_lang: "en",
         showsec: 5,
         delay: true,
+        auto_translate: true,
         images: false,
       },
       function (items) {
-        config.user = {
-          src_lang: items.src_lang,
-          user_lang: items.user_lang,
-          delay: items.delay,
-          showsec: items.showsec,
-          images: items.images,
-        };
+        config.user = items;
       }
     );
   }
@@ -120,16 +115,18 @@
     let self;
     return {
       add: function (subtitle) {
-        document
-          .querySelector("#" + config.mainWrap + " #" + config.subtitleWrap)
-          .insertAdjacentHTML(
-            "beforeend",
-            "<dl><dt>" +
-              subtitle.replace(/([A-zÀ-ú'\-]+)/gi, "<span>$1</span>") +
-              "</dt><dd></dd></dl>"
-          );
+        var el = document.querySelector(
+          "#" + config.mainWrap + " #" + config.subtitleWrap
+        );
+        el.insertAdjacentHTML(
+          "beforeend",
+          "<dl><dt>" +
+            subtitle.replace(/([A-zÀ-ú'\-]+)/gi, "<span>$1</span>") +
+            "</dt><dd></dd></dl>"
+        );
 
         self = this;
+        if (config.user.auto_translate) self.translateSentence(el.lastChild);
         self.scroll();
         self.addClickListner();
       },

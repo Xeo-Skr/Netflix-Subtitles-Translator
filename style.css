@@ -62,7 +62,7 @@ body:not(.open-tr-panel) #translate-ext {
 
 #translate-ext #subtitle-wrap {
   line-height: 1.5;
-  max-height: 90vh;
+  max-height: 100%;
   box-shadow: inset 0px 0 20px rgba(0, 0, 0, 0.2);
 }
 #translate-ext > *::-webkit-scrollbar {
@@ -121,6 +121,7 @@ body:not(.open-tr-panel) #translate-ext {
   z-index: 2;
   display: block;
   position: absolute;
+  cursor: pointer;
   z-index: 2;
   top: 0;
   background: #fff;
@@ -128,13 +129,14 @@ body:not(.open-tr-panel) #translate-ext {
 }
 #translate-ext.open-tr-panel #translation-wrap #tr-close-x {
   height: 100vh;
-  background: #555;
+  /* background: #555; */
   width: 0px;
   position: absolute;
   right: 0;
   top: 0;
   cursor: pointer;
   z-index: 3;
+  margin-right: 10px;
 }
 #translate-ext.open-tr-panel #translation-wrap #tr-close-x:before {
   content: "";
