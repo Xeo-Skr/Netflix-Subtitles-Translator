@@ -1,7 +1,9 @@
 (function () {
   let translated = [];
   let alltries = [];
-  let cache = [];
+
+  let token =
+    "ya29.c.Ko8B1gfatCdGQs_9yCMHckUxKUk7mWcYPWSVKWzkfzF8pW3PnOh77QHTyMwSx1xfWdunWVB_OETCNJZma9nKYzzEsz-7hqnM4ywOySZU1eqF5tiN8GKbwMZthIFFqKPXLUY4iwxxBfkSRaW5opsrOl5_-b2ivGERfdiWaAoDPzLEeFwl1ELiemdRMXqPYIxyyUI";
 
   let config = {
     launched: false,
@@ -25,13 +27,6 @@
 
     mainTranslateId: "translate-ext-main-tr",
     mainTranslateOpenClass: "open-bg-tr",
-
-    gimages:
-      "https://www.googleapis.com/customsearch/v1?&num=9&cx=017663620470495640824%3A3gyica0r5wy&filter=1&imgType=photo&safe=high&searchType=image&start=1&key=AIzaSyB4irElN8L3wOVcwwa2PnobvM0-FJOc2m8&q=",
-    phrase_trans_url:
-      "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&dj=1&source=icon&tk=467103.467103&q=",
-    word_trans_url:
-      "https://translate.googleapis.com/translate_a/single?client=gtx&dt=t&dt=bd&dj=1&hl=en-US&q=",
   };
 
   function get_options() {
@@ -39,10 +34,7 @@
       {
         src_lang: "es",
         user_lang: "en",
-        showsec: 5,
-        delay: true,
         auto_translate: true,
-        images: false,
       },
       function (items) {
         config.user = items;
@@ -86,12 +78,20 @@
   }
   createTapeWrap();
 
-  function loadJson(url, calback) {
-    if (cache[url]) {
-      return calback(cache[url]);
-    }
-
-    fetch(url)
+  function translateApi(text, calback) {
+    fetch("https://translation.googleapis.com/language/translate/v2", {
+      method: "POST",
+      body: JSON.stringify({
+        q: text,
+        source: config.user.src_lang,
+        target: config.user.user_lang,
+        format: "text",
+      }),
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json; charset=utf-8",
+      },
+    })
       .then(function (res) {
         if (res.status >= 200 && res.status < 300) {
           return Promise.resolve(res);
@@ -103,11 +103,10 @@
         return res.json();
       })
       .then(function (data) {
-        cache[url] = data;
         return calback(data);
       })
       .catch(function (err) {
-        //console.log('Fetch Error :-S', err);
+        console.log("Fetch Error :-S", err);
       });
   }
 
@@ -135,7 +134,7 @@
           "#" + config.mainWrap + " #" + config.subtitleWrap
         );
         if (elm.offsetHeight + elm.scrollTop + 150 > elm.scrollHeight) {
-          elm.scrollBy(0, 300);
+          elm.scrollIntoView();
         }
       },
       addClickListner: function () {
@@ -172,22 +171,11 @@
 
         el.classList.add(config.translatedSentence);
 
-        loadJson(
-          config.phrase_trans_url +
-            encodeURI(sentence) +
-            "&tl=" +
-            config.user.user_lang +
-            "&sl=" +
-            config.user.src_lang,
-          function (data) {
-            let gtrans = "";
-            data["sentences"].forEach(function (sentence) {
-              gtrans += sentence.trans + " ";
-            });
-
-            el.querySelector("dd").textContent = gtrans;
-          }
-        );
+        translateApi(sentence, function (data) {
+          var ddtarget = el.querySelector("dd");
+          ddtarget.textContent = data.data.translations[0].translatedText;
+          ddtarget.scrollIntoView();
+        });
       },
     };
   }
@@ -206,44 +194,9 @@
 
         document.querySelector("#" + config.imgWrap).textContent = "";
 
-        if (config.user.images) {
-          loadJson(config.gimages + encodeURI(word), this.addImages);
-        }
-
-        loadJson(
-          config.word_trans_url +
-            encodeURI(word) +
-            "&tl=" +
-            config.user.lang +
-            "&sl=" +
-            config.user.src_lang,
-          this.wordTranslate
-        );
+        translateApi(word, this.wordTranslate);
 
         self.close();
-        self.voice(word);
-      },
-      voice: function (word) {
-        let msg = new SpeechSynthesisUtterance(word);
-        msg.voice = speechSynthesis.getVoices().filter(function (voice) {
-          return voice.name == "Google US English";
-        })[0]; // chrome voice bug
-        msg.rate = 0.5;
-        msg.volume = 0.7;
-        msg.lang = "en-US";
-
-        document
-          .querySelector("#" + config.dsecriptionTitle + " span")
-          .addEventListener(
-            "click",
-            function (e) {
-              msg.voice = speechSynthesis.getVoices().filter(function (voice) {
-                return voice.name == "Google US English";
-              })[0]; // chrome voice bug
-              speechSynthesis.speak(msg);
-            },
-            false
-          );
       },
       close: function () {
         document.querySelector("#" + config.closeRightPanel).addEventListener(
@@ -265,30 +218,21 @@
           false
         );
       },
-      addImages: function (data) {
-        data["items"].forEach(function (item) {
-          document
-            .querySelector("#" + config.imgWrap)
-            .insertAdjacentHTML(
-              "beforeend",
-              '<img src="' + item.image.thumbnailLink + '">'
-            );
-        });
-      },
       wordTranslate: function (data) {
         document.querySelector(
           "#" + config.mainWrap + " #" + config.dsecriptionWrap
         ).innerHTML = "";
 
-        if (data["sentences"][0]["trans"]) {
+        if (data.data.translations[0].translatedText) {
           document
             .querySelector("#" + config.dsecriptionTitle)
             .insertAdjacentHTML(
               "beforeend",
-              " — " + data["sentences"][0]["trans"]
+              " — " + data.data.translations[0].translatedText
             );
         }
 
+        /*
         try {
           data["dict"].forEach(function (block) {
             let items = [];
@@ -307,6 +251,7 @@
             self.addToWrap(block["pos"], items);
           });
         } catch (e) {}
+        */
       },
 
       addToWrap: function (type, items) {
@@ -326,108 +271,8 @@
     };
   }
 
-  function pause() {
-    let self;
-    return {
-      setEvent: function () {
-        self = this;
-        document
-          .querySelector(".PlayerControlsNeo__button-control-row")
-          .addEventListener(
-            "click",
-            function (e) {
-              if (e.y > 190) {
-                return false;
-              }
-              self.toggle();
-            },
-            false
-          );
-      },
-      start: function () {
-        try {
-          document.querySelector(".button-nfplayerPlay").click();
-        } catch (e) {}
-      },
-      stop: function () {
-        try {
-          document.querySelector(".button-nfplayerPause").click();
-        } catch (e) {}
-      },
-      toggle: function () {
-        try {
-          if (document.querySelector(".button-nfplayerPause")) {
-            document.querySelector(".button-nfplayerPause").click();
-          } else {
-            document.querySelector(".button-nfplayerPlay").click();
-          }
-        } catch (e) {}
-      },
-    };
-  }
-
-  let tmd;
-  function centerTranslator() {
-    let self, elm;
-    return {
-      init: function (sentence) {
-        self = this;
-        elm = document.querySelector("#" + config.mainTranslateId);
-        try {
-          document
-            .querySelectorAll(".player-timedtext-text-container")
-            .forEach(function (elem) {
-              elem.addEventListener("click", function () {
-                self.translate(sentence);
-              });
-            });
-        } catch (e) {}
-      },
-      translate: function (sentence) {
-        self.clear();
-        if (config.user.delay) {
-          pause().stop();
-        }
-        loadJson(
-          config.phrase_trans_url +
-            encodeURI(sentence) +
-            "&tl=" +
-            config.user.lang +
-            "&sl=" +
-            config.user.src_lang,
-          function (data) {
-            data["sentences"].forEach(function (sentence) {
-              elm.textContent += sentence.trans + " ";
-            });
-            if (elm.textContent !== "") {
-              self.show();
-            } else {
-              pause().start();
-            }
-          }
-        );
-      },
-      show: function () {
-        elm.classList.add(config.mainTranslateOpenClass);
-        clearTimeout(tmd);
-
-        tmd = setTimeout(function () {
-          self.clear();
-          if (config.user.delay) {
-            pause().start();
-          }
-        }, config.user.showsec * 1000);
-      },
-      clear: function () {
-        elm.classList.remove(config.mainTranslateOpenClass);
-        elm.textContent = "";
-      },
-    };
-  }
-
   function run(item) {
     config.launched = true;
-    pause().setEvent();
     get_options();
 
     let query = "";
@@ -458,7 +303,6 @@
             return false;
           }
 
-          centerTranslator().init(subtitle);
           subtitleSentence().add(subtitle);
           subtitleBefore = subtitle;
         }, 100);
