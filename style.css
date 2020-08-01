@@ -20,7 +20,7 @@ body:not(.open-tr-panel) #translate-ext {
   padding: 20px;
   background: #000;
   bottom: 30%;
-  border: 2px solid white;
+  border: 2px solid #aaa;
   border-right: 0;
   padding: 20px;
 
@@ -106,7 +106,7 @@ body:not(.open-tr-panel) #translate-ext {
   cursor: pointer;
 }
 #translate-ext #subtitle-wrap dl dt span:hover {
-  background: yellow;
+  background: #ccc;
 }
 #translate-ext #subtitle-wrap dl dd {
   padding: 0;
